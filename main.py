@@ -126,8 +126,8 @@ def postwebhook():
                     # while True:
                     request_time = datetime.utcnow() - timedelta(hours=6, minutes=00)
                     strdate = request_time.strftime("%Y-%m-%d")
-                    req_min = strdate + 'T00:01:01'
-                    req_max = strdate + 'T23:59:59'
+                    req_min = strdate + 'T00:01:01-06:00'
+                    req_max = strdate + 'T23:59:59-06:00'
                     eventsservice = service.events().list(calendarId='primary', pageToken=page_token, timeMax=req_max,
                                                           timeMin=req_min).execute()
                     events = eventsservice.get('items', [])
