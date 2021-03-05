@@ -35,7 +35,7 @@ SCOPES = [
 ]
 API_SERVICE_NAME = 'calendar'
 API_VERSION = 'v3'
-redirect_uri = 'https://Chatbot.rameshnaidu.repl.co/GoogleCalendar'
+redirect_uri = 'https://intelligent-chatbot.herokuapp.com/GoogleCalendar'
 # MapsApiKey='AIzaSyABhkZhF323bkUPLjgwfDl2qR7UHRAz9-c'
 app = flask.Flask(__name__)
 
