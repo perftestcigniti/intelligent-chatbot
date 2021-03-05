@@ -78,6 +78,7 @@ def postwebhook():
                     "displayText": 5,
                     "source": "webhookdata"
                 }
+                globals()['res']=res
 
             else:
                 # print('This is else block')
