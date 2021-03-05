@@ -87,20 +87,6 @@ def postwebhook():
                 # last_updated_time=row[3]
                 time_delta = (present_time - row[3])
                 tt = divmod(time_delta.total_seconds(), 60)
-
-                '''with open("./JsonFile/client_secret.json") as f:
-                    data = json.load(f)'''
-                '''try:
-                  cred = google.oauth2.credentials.Credentials(calendar_cred)
-                  service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, cache_discovery=False,credentials=cred)
-                except TypeError as e:
-                  print(e) 
-                if not row[6]:
-                  calendar_list = service.calendarList().list(pageToken=page_token).execute()
-                  if not calendar_list:
-                    calendars=calendar_list['items']
-                    user_timezone=calendars[0].get('timeZone')'''
-
                 if tt[0] > 60:  # data.web.client_id#data.web.client_secret
                     fulfilment = []
                     refreshed_toks = refreshToken(Client_Id, Client_Secret, base64decode(row[2]))
