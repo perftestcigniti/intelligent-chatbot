@@ -12,6 +12,7 @@ import base64
 from datetime import datetime, timedelta
 import json
 import re
+import threading
 from df_response_lib import actions_on_google_response, fulfillment_response
 
 # import urllib.parse
@@ -92,7 +93,9 @@ def postwebhook():
                     fulfilment = []
                     refreshed_toks = refreshToken(Client_Id, Client_Secret, base64decode(row[2]))
                     print(refreshed_toks[0])
-                    updateGooglecredtokens(row[0], refreshed_toks[0], refreshed_toks[1])
+                    t = threading.Thread(target=updateGooglecredtokens,
+                                         args=(row[0], refreshed_toks[0], refreshed_toks[1]))
+                    t.start()
                     calendar_cred = {
                         "token": f"{refreshed_toks[0]}",
                         "refresh_token": f"{base64decode(row[2])}",
@@ -103,6 +106,7 @@ def postwebhook():
                         # "id_token":f"{base64decode(row[5])}",
                     }
                     try:
+                        #req=requests('https://www.googleapis.com/calendar/v3/calendars/primary/events')
                         cred = google.oauth2.credentials.Credentials(**calendar_cred)
                         service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, cache_discovery=False,
                                                                   credentials=cred)
@@ -122,23 +126,23 @@ def postwebhook():
                         res = ful.main_response(ful.fulfillment_text("No upcoming events found"),
                                                 fulfillment_messages=None, output_contexts=None,
                                                 followup_event_input=None)
-                        for event in events:
-                            start_date = event['start'].get('dateTime', event['start'].get('date'))
-                            end_date = event['end'].get('dateTime', event['end'].get('date'))
-                            calevents = event[
-                                            'summary'] + "\n\nStarts at:" + start_date + ",ends at:" + end_date + "\n\n Location:" + \
-                                        event['location']
-                            '''calevents = {"text": {"text": [
+                    for event in events:
+                        start_date = event['start'].get('dateTime', event['start'].get('date'))
+                        end_date = event['end'].get('dateTime', event['end'].get('date'))
+                        calevents = event['summary'] + "\n\nStarts at:" + start_date + ",ends at:" + end_date + "\n\n Location:" + \
+                                    event['location']
+                        '''calevents = {"text": {"text": [
                             event['summary'] + "\n\nStarts at:" + start_date['dateTime'] + ",ends at:" + end_date[
                             'dateTime']+"\n\n Location:"+event['location']]
                             }}'''
-                            fulfilment.append(calevents)
-                            res = ful.main_response(ful.fulfillment_text("Test"),
-                                                    fulfillment_messages=ful.fulfillment_messages(
-                                                        [aog.suggestion_chips(fulfilment)]), output_contexts=None,
-                                                    followup_event_input=None)
-                            # res = {"fulfillmentMessages": fulfilment, "source": "webhook"}
-                            globals()['res'] = res
+                        fulfilment.append(calevents)
+                        res = ful.main_response(ful.fulfillment_text("Test"),
+                                                fulfillment_messages=ful.fulfillment_messages(
+                                                    [aog.suggestion_chips(fulfilment)]), output_contexts=None,
+                                                followup_event_input=None)
+                        # res = {"fulfillmentMessages": fulfilment, "source": "webhook"}
+                        globals()['res'] = res
+
 
                 else:
                     print('second else block')
@@ -417,19 +421,21 @@ def updateGooglecredtokens(id, accesstoken, id_token):
     print(sql)
     try:
         # Execute the SQL command
-        ret = cursor.execute(sql)
-        print(ret)
+        cursor.execute(sql)
+        #print(ret)
         # globals()['ret']=ret
         # Commit your changes in the database
         con.commit()
-        '''if ret.rowcount is not None:
-            validator = True'''
+        if cursor.rowcount is not None:
+            validator = True
+            globals()['validator'] = validator
+            print(validator)
     except TypeError as e:
         print(e)
         # Rollback in case there is any error
         con.rollback()
         validator = False
-    print(validator)
+
     return validator
 
 
@@ -502,4 +508,5 @@ def credentials_to_dict(credentials):
 
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    app.run(host='0.0.0.0', port=5075, debug=True)
+    #app.run(host='0.0.0.0', port=5075, debug=True)
+    app.run(debug=True)
