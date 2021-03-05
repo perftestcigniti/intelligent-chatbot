@@ -92,7 +92,7 @@ def postwebhook():
                 if tt[0] > 60:  # data.web.client_id#data.web.client_secret
                     fulfilment = []
                     refreshed_toks = refreshToken(Client_Id, Client_Secret, base64decode(row[2]))
-                    print(refreshed_toks[0])
+                    #print(refreshed_toks[0])
                     t = threading.Thread(target=updateGooglecredtokens,
                                          args=(row[0], refreshed_toks[0], refreshed_toks[1]))
                     t.start()
@@ -145,7 +145,7 @@ def postwebhook():
 
 
                 else:
-                    print('second else block')
+                    #print('second else block')
                     fulfilment = []
                     calendar_cred = {
                         "token": f"{base64decode(row[1])}",
@@ -407,7 +407,7 @@ def GoogleCalendar():
 
 
 def updateGooglecredtokens(id, accesstoken, id_token):
-    print("entered")
+    #print("entered")
     validator = False
     # ret=None
     now = datetime.utcnow()
@@ -418,7 +418,7 @@ def updateGooglecredtokens(id, accesstoken, id_token):
     enco_acess = base64encode(accesstoken)
     enco_idtoken = base64encode(id_token)
     sql = f'UPDATE GoogleCred SET access_token ="{enco_acess}",id_token="{enco_idtoken}",updated_date="{now.strftime("%Y-%m-%d %H:%M:%S")}" WHERE Id ={id}'
-    print(sql)
+    #print(sql)
     try:
         # Execute the SQL command
         cursor.execute(sql)
@@ -429,7 +429,7 @@ def updateGooglecredtokens(id, accesstoken, id_token):
         if cursor.rowcount is not None:
             validator = True
             globals()['validator'] = validator
-            print(validator)
+            #print(validator)
     except TypeError as e:
         print(e)
         # Rollback in case there is any error
@@ -462,7 +462,7 @@ def base64decode(googletokens):
 
 
 def refreshToken(client_id, client_secret, refresh_token):
-    print(refresh_token)
+    #print(refresh_token)
     params = {
         "grant_type": "refresh_token",
         "client_id": client_id,
