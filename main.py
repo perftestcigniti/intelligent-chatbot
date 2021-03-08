@@ -246,7 +246,7 @@ def postwebhook():
 
                     print("You are late " + strfdelta(tt, "{hours}:{minutes}"))
                     # res=ful.main_response(ful.fulfillment_text("Distance from your location is"+"{:.2f}".format(distresults['travelDistance'])+" kms,You are late by"+strfdelta(tt, "{hours}hr:{minutes}min")),fulfillment_messages=[res_message],output_contexts=None,followup_event_input=None)
-                    res = ful.main_response(ful.fulfillment_text('response'), fulfillment_messages=res_message,
+                    res = ful.main_response(ful.fulfillment_text('response'), fulfillment_messages=[res_message],
                                             output_contexts=None, followup_event_input=None)
                     globals()['res'] = res
                     # print("you are late")
@@ -259,8 +259,8 @@ def postwebhook():
                                                                                                                'travelDistance']) + " kms,You are early by" + strfdelta(
                                                             tt, "{hours}hours:{minutes}minutes"), False]])
                     # res=ful.main_response(ful.fulfillment_text("Distance from your location is"+"{:.2f}".format(distresults['travelDistance'])+" kms,You are early by"+strfdelta(tt, "{hours}:{minutes}")),fulfillment_messages=None,output_contexts=None,followup_event_input=None)
-                    res = res_message
-                    # ful.main_response(ful.fulfillment_text('response'),fulfillment_messages=res_message,output_contexts=None,followup_event_input=None)
+                    #res = res_message
+                    res = ful.main_response(ful.fulfillment_text('response'), fulfillment_messages=[res_message], output_contexts=None,followup_event_input=None)
                     globals()['res'] = res
 
             else:
@@ -277,8 +277,8 @@ def postwebhook():
                                                                                                                'travelDistance']) + " kms,You are late by" + strfdelta(
                                                             tt, "{hours}:{minutes}"), False]])
                     # res=ful.main_response(ful.fulfillment_text("Distance from your location is"+"{:.2f}".format(distresults['travelDistance'])+" kms,You are late by"+strfdelta(tt, "{hours}:{minutes}")),fulfillment_messages=None,output_contexts=None,followup_event_input=None)
-                    res = res_message
-                    # ful.main_response(ful.fulfillment_text('response'),fulfillment_messages=[res_message],output_contexts=None,followup_event_input=None)
+                    #res = res_message
+                    res=ful.main_response(ful.fulfillment_text('response'), fulfillment_messages=[res_message],output_contexts=None,followup_event_input=None)
                     globals()['res'] = res
                     # print("you are late")
                 elif meetingtime > presenttime:
