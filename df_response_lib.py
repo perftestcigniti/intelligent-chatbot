@@ -41,7 +41,7 @@ class actions_on_google_response():
                 else:
                     response_dict = {
                         # text to be displayed
-                        "displayText": str(response[0]),
+                        #"displayText": str(response[0]),
                         # text to speech text
                         "textToSpeech": str(response[1])
                     }
