@@ -441,7 +441,7 @@ class fulfillment_response():
     # @param fulfillment_messages = fulfillment_messages JSON
     # @param output_contexts = output_contexts JSON
     # @param followup_event_input = followup_event_input JSON
-    def main_response(self, fulfillment_text, fulfillment_messages=None, output_contexts=None, followup_event_input=None):
+    def main_response(self, fulfillment_text=None, fulfillment_messages=None, output_contexts=None, followup_event_input=None):
         if followup_event_input is not None:
             if output_contexts is not None:
                 if fulfillment_messages is not None:
@@ -483,10 +483,15 @@ class fulfillment_response():
                         "outputContexts": output_contexts['output_contexts']
                     }
             else:
-                if fulfillment_messages is not None:
+                if fulfillment_messages is not None and fulfillment_text is not None:
                     response = {
                         "fulfillmentText": fulfillment_text['fulfillment_text'],
                         "fulfillmentMessages": fulfillment_messages['fulfillment_messages']
+                    }
+                elif fulfillment_messages is not None:
+                    response = {
+                        "fulfillmentMessages": fulfillment_messages['fulfillment_messages']
+
                     }
                 else:
                     response = {

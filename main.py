@@ -190,8 +190,8 @@ def postwebhook():
                         }}'''
                         fulfilment.append(calevents)
                     # res="test success"#cal_event
-                    res = ful.main_response(ful.fulfillment_text("Test"), fulfillment_messages=ful.fulfillment_messages(
-                        [aog.suggestion_chips(fulfilment)]), output_contexts=None, followup_event_input=None)
+                    res = ful.main_response(fulfillment_messages=ful.fulfillment_messages(
+                        [aog.suggestion_chips(fulfilment)]), fulfillment_text=None, output_contexts=None, followup_event_input=None)
                     # res = {"fulfillmentMessages": fulfilment, "source": "webhook"}
                     globals()['res'] = res
                     # print(res)
@@ -237,30 +237,28 @@ def postwebhook():
                     print(presenttime)
                     print(meetingtime)
                     tt = presenttime - meetingtime
-                    res_message = aog.simple_response([["Distance from your location is" + "{:.2f}".format(
-                        distresults['travelDistance']) + " kms,You are late by" + strfdelta(tt,
-                                                                                            "{hours}hr:{minutes}min"),
-                                                        "Distance from your location is" + "{:.2f}".format(distresults[
-                                                                                                               'travelDistance']) + " kms,You are late by" + strfdelta(
-                                                            tt, "{hours}hours:{minutes}minutes"), False]])
+                    res_message = aog.simple_response([["Distance from your location is " + "{:.2f}".format(
+                        distresults['travelDistance']) + " kms,You are late by " + strfdelta(tt, "{hours}hr:{minutes}min"),
+                                                        "Distance from your location is " + "{:.2f}".format(distresults['travelDistance']) +
+                                                        " kms,You are late by " + strfdelta(tt, "{hours} hr:{minutes}min"), False]])
 
-                    print("You are late " + strfdelta(tt, "{hours}:{minutes}"))
+                    #print("You are late " + strfdelta(tt, "{hours}:{minutes}"))
                     # res=ful.main_response(ful.fulfillment_text("Distance from your location is"+"{:.2f}".format(distresults['travelDistance'])+" kms,You are late by"+strfdelta(tt, "{hours}hr:{minutes}min")),fulfillment_messages=[res_message],output_contexts=None,followup_event_input=None)
-                    res = ful.main_response(ful.fulfillment_text('response'), ful.fulfillment_messages([res_message]),
+                    res = ful.main_response(ful.fulfillment_messages([res_message]), fulfillment_text=None,
                                             output_contexts=None, followup_event_input=None)
                     globals()['res'] = res
                     # print("you are late")
                 elif meetingtime > presenttime:
                     tt = meetingtime - presenttime
-                    print("you are early" + strfdelta(tt, "{hours}:{minutes}"))
-                    res_message = aog.simple_response([["Distance from your location is" + "{:.2f}".format(
-                        distresults['travelDistance']) + " kms,You are early by" + strfdelta(tt, "{hours}:{minutes}"),
-                                                        "Distance from your location is" + "{:.2f}".format(distresults[
-                                                                                                               'travelDistance']) + " kms,You are early by" + strfdelta(
-                                                            tt, "{hours}hours:{minutes}minutes"), False]])
+                    #print("you are early" + strfdelta(tt, "{hours}:{minutes}"))
+                    res_message = aog.simple_response([["Distance from your location is " + "{:.2f}".format(
+                        distresults['travelDistance']) + " kms,You are early by " + strfdelta(tt, "{hours} hr:{minutes} min"),
+                                                        "Distance from your location is " + "{:.2f}".format(distresults[
+                                                                                                               'travelDistance']) + " kms,You are early by " + strfdelta(
+                                                            tt, "{hours}hr:{minutes} min"), False]])
                     # res=ful.main_response(ful.fulfillment_text("Distance from your location is"+"{:.2f}".format(distresults['travelDistance'])+" kms,You are early by"+strfdelta(tt, "{hours}:{minutes}")),fulfillment_messages=None,output_contexts=None,followup_event_input=None)
                     #res = res_message
-                    res = ful.main_response(ful.fulfillment_text('response'), ful.fulfillment_messages([res_message]), output_contexts=None,followup_event_input=None)
+                    res = ful.main_response(ful.fulfillment_messages([res_message]), fulfillment_text=None, output_contexts=None,followup_event_input=None)
                     globals()['res'] = res
 
             else:
@@ -271,26 +269,26 @@ def postwebhook():
                 if presenttime > meetingtime:
                     tt = presenttime - meetingtime
                     print("You are late " + strfdelta(tt, "{hours}:{minutes}"))
-                    res_message = aog.simple_response([["Distance from your location is" + "{:.2f}".format(
-                        distresults['travelDistance']) + " kms,You are late by" + strfdelta(tt, "{hours}:{minutes}"),
-                                                        "Distance from your location is" + "{:.2f}".format(distresults[
-                                                                                                               'travelDistance']) + " kms,You are late by" + strfdelta(
-                                                            tt, "{hours}:{minutes}"), False]])
+                    res_message = aog.simple_response([["Distance from your location is " + "{:.2f}".format(
+                        distresults['travelDistance']) + " kms,You are late by " + strfdelta(tt, "{hours} hr:{minutes} min"),
+                                                        "Distance from your location is " + "{:.2f}".format(distresults[
+                                                                                                               'travelDistance']) + " kms,You are late by " + strfdelta(
+                                                            tt, "{hours} hr:{minutes} min"), False]])
                     # res=ful.main_response(ful.fulfillment_text("Distance from your location is"+"{:.2f}".format(distresults['travelDistance'])+" kms,You are late by"+strfdelta(tt, "{hours}:{minutes}")),fulfillment_messages=None,output_contexts=None,followup_event_input=None)
                     #res = res_message
-                    res=ful.main_response(ful.fulfillment_text('response'), ful.fulfillment_messages([res_message]), output_contexts=None,followup_event_input=None)
+                    res=ful.main_response(ful.fulfillment_messages([res_message]), fulfillment_text=None, output_contexts=None,followup_event_input=None)
                     globals()['res'] = res
                     # print("you are late")
                 elif meetingtime > presenttime:
                     tt = meetingtime - presenttime
                     print("you are early" + strfdelta(tt, "{hours}:{minutes}"))
-                    res_message = aog.simple_response([["Distance from your location is" + "{:.2f}".format(
-                        distresults['travelDistance']) + " kms,You are early by" + strfdelta(tt, "{hours}:{minutes}"),
-                                                        "Distance from your location is" + "{:.2f}".format(distresults[
-                                                                                                               'travelDistance']) + " kms,You are early by" + strfdelta(
-                                                            tt, "{hours}:{minutes}"), False]])
+                    res_message = aog.simple_response([["Distance from your location is " + "{:.2f}".format(
+                        distresults['travelDistance']) + " kms,You are early by " + strfdelta(tt, "{hours} hr:{minutes} min"),
+                                                        "Distance from your location is " + "{:.2f}".format(distresults[
+                                                                                                               'travelDistance']) + " kms,You are early by " + strfdelta(
+                                                            tt, "{hours} hr:{minutes} min"), False]])
                     # res=ful.main_response(ful.fulfillment_text("Distance from your location is"+"{:.2f}".format(distresults['travelDistance'])+" kms,You are early by"+strfdelta(tt, "{hours}:{minutes}")),fulfillment_messages=None,output_contexts=None,followup_event_input=None)
-                    res = ful.main_response(ful.fulfillment_text('response'), ful.fulfillment_messages([res_message]),
+                    res = ful.main_response(ful.fulfillment_messages([res_message]), fulfillment_text=None,
                                             output_contexts=None, followup_event_input=None)
                     globals()['res'] = res
 
