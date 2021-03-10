@@ -102,7 +102,7 @@ def postwebhook():
                     for event in events:
                         start_date = event['start'].get('dateTime', event['start'].get('date'))
                         end_date = event['end'].get('dateTime', event['end'].get('date'))
-                        cal_events = "Event:"+event['summary'] + "\n\n Starts at:" + start_date + ",ends at:" + end_date + "Location:" + \
+                        cal_events = "Event:"+event['summary'] + "\n\n Starts at:" + start_date + ",ends at:" + end_date + " Location:" + \
                                     event['location']
                         fulfilment.append(cal_events)
                         res = ful.main_response(fulfillment_text=None, fulfillment_messages=ful.fulfillment_messages(
