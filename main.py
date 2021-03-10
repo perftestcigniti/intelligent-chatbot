@@ -113,10 +113,10 @@ def postwebhook():
         elif query_result.get('action') == 'Mymeetings_Google_emailid_Location-UserLocation':
             query_result.get('parameters')
             params = query_result.get('parameters')
-            outputcontext=req.get('outputContexts')
+            #outputcontext=req.get('outputContexts')
             meeting_loc = re.findall('Location:*(.+)', params['meeting_location'], re.IGNORECASE)
             str_start_date = params['Startdate']
-            print(str_start_date)
+            #print(str_start_date)
             st_time = re.findall('Starts at:*(.+),ends at', str_start_date, re.IGNORECASE)
             que1 = queue.Queue()
             dt = ops[st_time[0][19:20]](datetime.utcnow(),
@@ -125,7 +125,7 @@ def postwebhook():
             distance_result = get_distance_and_duration([params['present_location'], meeting_loc[0]], dt.strftime("%Y-%m-%d %H:%M:%S"), st_time[0])
 
             #print(distance_result)
-            next_result = fetch_next_location_details(params['email'], meeting_loc[0], st_time[0])
+            next_result = fetch_next_location_details(params['email'], st_time[0])
             #print(next_result)
             res = ful.main_response(fulfillment_text=None,
                                     fulfillment_messages=ful.fulfillment_messages([distance_result, next_result]),
@@ -146,11 +146,23 @@ def postwebhook():
             print(result)
             #ful.main_response(fulfillment_text=None, fulfillment_messages=ful.fulfillment_messages([distanceresult, result]), output_contexts=None, followup_event_input=None)
             globals()['res'] = res'''
+        elif query_result.get('action') == 'GetUserLocation-GetGoogleCalendarNextLocation':
+            query_result.get('parameters')
+            params = query_result.get('parameters')
+            str_start_date = params['Startdate']
+            st_time = re.findall('Starts at:*(.+),ends at', str_start_date, re.IGNORECASE)
+
+            next_result = fetch_next_location_details(params['email'], st_time[0])
+            res = ful.main_response(fulfillment_text=None,
+                                    fulfillment_messages=ful.fulfillment_messages([next_result]),
+                                    output_contexts=None, followup_event_input=None)
+            globals()['res'] = res
+
         print(res)
         return jsonify(res)
 
 
-def fetch_next_location_details(email, meeting_location, start_date_time):
+def fetch_next_location_details(email, start_date_time):
     fulfilment = []
     res=None
     aog = actions_on_google_response()
@@ -160,7 +172,7 @@ def fetch_next_location_details(email, meeting_location, start_date_time):
     #stt=start_date_time.replace('T', ' ')
     events = google_auth(row, listToString(start_date_time[0:19]), end_date_time)
     #print(events)
-    cal_events=None
+    cal_events = None
     if events[1] is None:
         res = aog.simple_response(["No events found further", "No events found further", False])
         globals()['res'] = res
