@@ -102,7 +102,7 @@ def postwebhook():
                     for event in events:
                         start_date = event['start'].get('dateTime', event['start'].get('date'))
                         end_date = event['end'].get('dateTime', event['end'].get('date'))
-                        cal_events = event['summary'] + "\n\nStarts at:" + start_date + ",ends at:" + end_date + "\n\n Location:" + \
+                        cal_events = event['summary'] + "\n\n Starts at:" + start_date + ",ends at:" + end_date + "\n\n Location:" + \
                                     event['location']
                         fulfilment.append(cal_events)
                         res = ful.main_response(fulfillment_text=None, fulfillment_messages=ful.fulfillment_messages(
@@ -113,6 +113,7 @@ def postwebhook():
         elif query_result.get('action') == 'Mymeetings_Google_emailid_Location-UserLocation':
             query_result.get('parameters')
             params = query_result.get('parameters')
+            outputcontext=req.get('outputContexts')
             meeting_loc = re.findall('Location:*(.+)', params['meeting_location'], re.IGNORECASE)
             str_start_date = params['Startdate']
             print(str_start_date)
