@@ -100,7 +100,7 @@ def postwebhook():
                                             followup_event_input=None)
                 else:
                     for event in events:
-                        start_date = event['start'].get('dateTime', event['start'].get('date'))
+                        start_date = "Events: "+event['start'].get('dateTime', event['start'].get('date'))
                         end_date = event['end'].get('dateTime', event['end'].get('date'))
                         cal_events = event['summary'] + "\n\n Starts at:" + start_date + ",ends at:" + end_date + "\n\n Location:" + \
                                     event['location']
@@ -181,7 +181,7 @@ def fetch_next_location_details(email, start_date_time):
 
         start_date = events[1]['start'].get('dateTime', events[1]['start'].get('date'))
         end_date = events[1]['end'].get('dateTime', events[1]['end'].get('date'))
-        cal_events = "Upcoming Event:"+events[1]['summary'] + "\n\nStarts at:" + start_date + ",ends at:" + end_date + "\n\n Location:"\
+        cal_events = "Upcoming Event: "+events[1]['summary'] + "\n\nStarts at:" + start_date + ",ends at:" + end_date + "\n\n Location:"\
                          + events[1]['location']
         globals()['cal_events'] = cal_events
         pt = present_endtime.replace('T', ' ')
