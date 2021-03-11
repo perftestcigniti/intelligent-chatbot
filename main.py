@@ -174,24 +174,26 @@ def fetch_next_location_details(email, start_date_time):
     events = google_auth(row, listToString(start_date_time[0:19]), end_date_time, 2)
     #print(events)
     cal_events = None
-    if events[1] is None:
-        res = aog.simple_response(["No events found further", "No events found further", False])
-        globals()['res'] = res
-    else:
+    if len(events) > 1:
         present_endtime = events[0]['end'].get('dateTime', events[1]['end'].get('date'))
 
         start_date = events[1]['start'].get('dateTime', events[1]['start'].get('date'))
         end_date = events[1]['end'].get('dateTime', events[1]['end'].get('date'))
-        cal_events = "Upcoming Event: "+events[1]['summary'] + "\n\nStarts at:" + start_date + ",ends at:" + end_date + "\n\n Location:"\
-                         + events[1]['location']
+        cal_events = "Upcoming Event: " + events[1][
+            'summary'] + "\n\nStarts at:" + start_date + ",ends at:" + end_date + "\n\n Location:" \
+                     + events[1]['location']
         globals()['cal_events'] = cal_events
         pt = present_endtime.replace('T', ' ')
         st = start_date.replace('T', ' ')
-        distance_matrix = get_distance_and_duration_for_next_location([events[0]['location'], events[1]['location']], listToString(pt[0:19]), listToString(st[0:19]))
-        #print(distance_matrix)
-        cal_events = cal_events+"\n\n"+distance_matrix
+        distance_matrix = get_distance_and_duration_for_next_location([events[0]['location'], events[1]['location']],
+                                                                      listToString(pt[0:19]), listToString(st[0:19]))
+        # print(distance_matrix)
+        cal_events = cal_events + "\n\n" + distance_matrix
         fulfilment.append(cal_events)
         res = aog.suggestion_chips(fulfilment)
+        globals()['res'] = res
+    else:
+        res = aog.simple_response([["No events found further", "No events found further", False]])
         globals()['res'] = res
     #print(res)
     return res
