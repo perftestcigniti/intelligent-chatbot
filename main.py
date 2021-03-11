@@ -158,7 +158,7 @@ def postwebhook():
                                     output_contexts=None, followup_event_input=None)
             globals()['res'] = res
 
-        print(res)
+        #print(res)
         return jsonify(res)
 
 
@@ -170,7 +170,7 @@ def fetch_next_location_details(email, start_date_time):
     st = start_date_time.split('T')
     end_date_time = st[0]+"T23:59:59"
     #stt=start_date_time.replace('T', ' ')
-    events = google_auth(row, listToString(start_date_time[0:19]), end_date_time)
+    events = google_auth(row, listToString(start_date_time[0:19]), end_date_time, 2)
     #print(events)
     cal_events = None
     if events[1] is None:
@@ -220,6 +220,7 @@ def get_distance_and_duration(locations, presenttime, nexttime):
 
         coords.append(m_coords[0])
         coords.append(m_coords[1])
+    print(coords)
     r = requests.get(
         f'https://dev.virtualearth.net/REST/v1/Routes/DistanceMatrix?origins={coords[0]},{coords[1]}&destinations={coords[2]},{coords[3]}&travelMode=driving&timeUnit=minute&distanceUnit=km&key=Av8kGlFn5a12aa2Y735ol8r6cYv4Mmf_HnOUQry1SZmSpVUHWzMWpUSi9ytac59t')
     # print(r.text)
@@ -318,7 +319,7 @@ def get_distance_and_duration_for_next_location(locations, presenttime, nexttime
     return res
 
 
-def google_auth(row, req_min, req_max):
+def google_auth(row, req_min, req_max, max_results=0):
     present_time = datetime.utcnow()
     present_time.strftime("%Y-%m-%d %H:%M:%S")
     # last_updated_time = datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')
@@ -349,24 +350,55 @@ def google_auth(row, req_min, req_max):
             "client_secret": f"{Client_Secret}",
             "scopes": SCOPES,
         }
+    #print(calendar_cred)
     page_token = None
     try:
 
         timz = datetime.now(pytz.timezone(row[3])).strftime('%z')
         offset = timz[:3] + ':' + timz[3:]
+        #requests.get(https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMax=2021-03-11T23:59:59-06:00&timeMin=2021-03-11T00:01:01-06:00)
+        BASE_URL = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "+calendar_cred['token']
+        }
+        if max_results == 0:
+            params = {
+                "calendarId": "primary",
+                "pageToken": page_token,
+                "timeMax": req_max+offset,
+                "timeMin": req_min+offset,
+                "fields": 'items(summary,location,start,end)'
+            }
+        else:
+            params = {
+                "calendarId": "primary",
+                "pageToken": page_token,
+                "timeMax": req_max + offset,
+                "timeMin": req_min + offset,
+                "maxResults":2,
+                "fields": 'items(summary,location,start,end)'
+            }
 
-        cred = google.oauth2.credentials.Credentials(**calendar_cred)
-        service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, cache_discovery=False,
-                                                  credentials=cred)
-        events_service = service.events().list(calendarId='primary', pageToken=page_token, timeMax=req_max+offset,
-                                               timeMin=req_min+offset).execute()
-
-        #events.extend()
-        events = events_service.get('items', [])
-        globals()['events']=events
+        events_service = requests.get(BASE_URL, headers=headers, params=params)
+        #print(events_service.json())
+        events = events_service.json().get('items', [])
+        globals()['events'] = events
     except Exception as e:
         print(str(e))
+    #print(events)
     return events
+    #cred = google.oauth2.credentials.Credentials(**calendar_cred)
+    ''' service = googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, cache_discovery=False,
+                                                  credentials=cred)
+        if max_results == 0:
+            events_service = service.events().list(calendarId='primary', pageToken=page_token, timeMax=req_max+offset,
+                                                   timeMin=req_min+offset, fields='items(summary,location,start,end)').execute()
+        else:
+            events_service = service.events().list(calendarId='primary', pageToken=page_token, timeMax=req_max + offset,
+                                                   timeMin=req_min + offset, maxResults=2,
+                                                   fields='items(summary,location,start,end)').execute()'''
+
 
 
 # update user timezone
