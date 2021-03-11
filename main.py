@@ -217,8 +217,7 @@ def get_distance_and_duration(locations, presenttime, nexttime):
     coords=[]
     res = None
     for location in locations:
-        meeting_location = geocoder.bing(location,
-                                         key='Av8kGlFn5a12aa2Y735ol8r6cYv4Mmf_HnOUQry1SZmSpVUHWzMWpUSi9ytac59t')
+        meeting_location = geocoder.bing(location,key='Av8kGlFn5a12aa2Y735ol8r6cYv4Mmf_HnOUQry1SZmSpVUHWzMWpUSi9ytac59t')
         m_coords = meeting_location.latlng
 
         coords.append(m_coords[0])
