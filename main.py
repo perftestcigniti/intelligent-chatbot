@@ -114,7 +114,6 @@ def postwebhook():
             query_result.get('parameters')
             params = query_result.get('parameters')
             #outputcontext=req.get('outputContexts')
-
             meeting_loc = re.findall('Location:*(.+)', params['selected_event'], re.IGNORECASE)
             #str_start_date = params['selected_event']
             #print(str_start_date)
