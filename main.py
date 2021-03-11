@@ -114,11 +114,12 @@ def postwebhook():
             query_result.get('parameters')
             params = query_result.get('parameters')
             #outputcontext=req.get('outputContexts')
-            meeting_loc = re.findall('Location:*(.+)', params['meeting_location'], re.IGNORECASE)
-            str_start_date = params['Startdate']
+
+            meeting_loc = re.findall('Location:*(.+)', params['selected_event'], re.IGNORECASE)
+            #str_start_date = params['selected_event']
             #print(str_start_date)
-            st_time = re.findall('Starts at:*(.+),ends at', str_start_date, re.IGNORECASE)
-            que1 = queue.Queue()
+            st_time = re.findall('Starts at:*(.+),ends at', params['selected_event'], re.IGNORECASE)
+            #que1 = queue.Queue()
             dt = ops[st_time[0][19:20]](datetime.utcnow(),
                                         timedelta(hours=int(str(st_time[0][20]) + str(st_time[0][21])),
                                                   minutes=int(str(st_time[0][23]) + str(st_time[0][24]))))
@@ -149,8 +150,9 @@ def postwebhook():
         elif query_result.get('action') == 'GetUserLocation-GetGoogleCalendarNextLocation':
             query_result.get('parameters')
             params = query_result.get('parameters')
-            str_start_date = params['Startdate']
-            st_time = re.findall('Starts at:*(.+),ends at', str_start_date, re.IGNORECASE)
+            #params['upcoming_event']
+            #str_start_date = params['Startdate']
+            st_time = re.findall('Starts at:*(.+),ends at', params['upcoming_event'], re.IGNORECASE)
 
             next_result = fetch_next_location_details(params['email'], st_time[0])
             res = ful.main_response(fulfillment_text=None,
